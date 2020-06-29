@@ -5,16 +5,44 @@ using UnityEngine;
 public class FollowPlayer : MonoBehaviour
 {
     [SerializeField] PlayerController playerController;
-    [SerializeField] Vector3 playerOffset = new Vector3(0, 8, -15);
+    [SerializeField] Transform cameraPos;
+    [SerializeField] Transform speedCameraPos;
+    [SerializeField] Transform slowCameraPos;
     [SerializeField] private float transitionSpeed = 6;
+    Vector3 localOffset;
 
     void Update()
     {
-        Vector3 localOffset = playerController.transform.right * playerOffset.x + playerController.transform.up * playerOffset.y + playerController.transform.forward * playerOffset.z;
+        FollowsPlayer();
+        CameraSpeed();
+        CameraSlow();
+    }
 
-        Vector3 desiredPosition = playerController.transform.position + localOffset;
-        transform.position = Vector3.Lerp(transform.position, desiredPosition, Time.deltaTime * transitionSpeed);
+    private void FollowsPlayer()
+    {
+        if(!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.LeftControl))
+        {
+            localOffset = cameraPos.position;
+        }
+            
 
+        transform.position = Vector3.Lerp(transform.position, localOffset, Time.deltaTime * transitionSpeed);
         transform.rotation = Quaternion.Lerp(transform.rotation, playerController.transform.rotation, Time.deltaTime * transitionSpeed);
+    }
+
+    private void CameraSpeed()
+    {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            localOffset = speedCameraPos.position;
+        }
+    }
+
+    private void CameraSlow()
+    {
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            localOffset = slowCameraPos.position;
+        }
     }
 }
