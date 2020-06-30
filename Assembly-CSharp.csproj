@@ -63,8 +63,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\GridGenerator.cs" />
     <Compile Include="Assets\Scripts\FollowPlayer.cs" />
+    <Compile Include="Assets\Scripts\GridGenerator.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <None Include="Assets\Samples\Polybrush\1.0.1\Shader Examples (Standard)\Shader\StandardVertexColor.shader" />
     <None Include="Assets\Samples\Polybrush\1.0.1\Shader Examples (Standard)\Shader\StandardTextureBlend.shader" />

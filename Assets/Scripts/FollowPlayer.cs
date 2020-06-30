@@ -21,10 +21,7 @@ public class FollowPlayer : MonoBehaviour
     private void FollowsPlayer()
     {
         if(!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.LeftControl))
-        {
             localOffset = cameraPos.position;
-        }
-            
 
         transform.position = Vector3.Lerp(transform.position, localOffset, Time.deltaTime * transitionSpeed);
         transform.rotation = Quaternion.Lerp(transform.rotation, playerController.transform.rotation, Time.deltaTime * transitionSpeed);
@@ -32,17 +29,16 @@ public class FollowPlayer : MonoBehaviour
 
     private void CameraSpeed()
     {
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
+        if (Input.GetKey(KeyCode.LeftShift) && playerController.speedMeter >= 0)
             localOffset = speedCameraPos.position;
-        }
+
+        else if (playerController.speedMeter < 0)
+            localOffset = cameraPos.position;
     }
 
     private void CameraSlow()
     {
         if (Input.GetKey(KeyCode.LeftControl))
-        {
             localOffset = slowCameraPos.position;
-        }
     }
 }

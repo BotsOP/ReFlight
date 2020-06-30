@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,17 +11,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float momentumDelay;
     [SerializeField] float secondsToWait = 1;
     [SerializeField] float timesToCheckPerSec;
+    [SerializeField] Slider slider;
 
     float verticalInput;
     float horizontalInput;
     float updatedSpeed;
     float speedValue = 40;
     float resetAxisTimer = 0;
-    public float speedTransition = 2;
+    public float speedMeter = 200;
+    float speedTransition = 2;
 
-    public float yValue;
-    public float tempYValue;
-    public float yAcceleration;
+    float yValue;
+    float tempYValue;
+    float yAcceleration;
 
     bool shouldContinueCheck = true;
 
@@ -43,6 +46,8 @@ public class PlayerController : MonoBehaviour
         SpeedUp();
         SlowDown();
         StartCoroutine("CalculateAccelerationY");
+
+        slider.value = speedMeter / 200;
     }
 
     void FixedUpdate()
@@ -123,7 +128,8 @@ public class PlayerController : MonoBehaviour
 
     private void SpeedUp()
     {
-        if (Input.GetKey(KeyCode.LeftShift))
+        StartCoroutine(CheckSpeedMeter());
+        if (speedMeter > 0 && Input.GetKey(KeyCode.LeftShift))
         {
             speedValue = 100;
             speedTransition = 0.5f;
@@ -132,12 +138,30 @@ public class PlayerController : MonoBehaviour
                 speed = 150;
             }
         }
-        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        else if (Input.GetKeyUp(KeyCode.LeftShift) || speedMeter < 0)
         {
             speedValue = 40;
             speedTransition = 2f;
         }
             
+    }
+
+    private IEnumerator CheckSpeedMeter()
+    {
+        if (Input.GetKey(KeyCode.LeftShift) && speedMeter >= -1)
+        {
+            speedMeter = Mathf.Clamp(speedMeter, 0, 200);
+            speedMeter --;
+        }
+        else if (speedMeter < 200)
+        {
+            yield return new WaitForSeconds(1);
+            if(speedMeter < 200)
+                speedMeter += 2;
+            if (speedMeter == 201)
+                speedMeter = 200;
+        }
+        
     }
 
     private void SlowDown()
