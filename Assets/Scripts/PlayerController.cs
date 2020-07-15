@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
 
     float verticalInput;
     float horizontalInput;
+    float sidewaysInput;
     float updatedSpeed;
     float speedValue = 40;
     float resetAxisTimer = 0;
@@ -59,6 +60,7 @@ public class PlayerController : MonoBehaviour
     {
         verticalInput = Input.GetAxis("Vertical");
         horizontalInput = Input.GetAxis("Horizontal");
+        sidewaysInput = Input.GetAxis("Sideways");
 
         if (verticalInput != 0)
         {
@@ -68,6 +70,11 @@ public class PlayerController : MonoBehaviour
         if (horizontalInput != 0)
         {
             MoveLeftRight(-horizontalInput);
+        }
+
+        if (sidewaysInput != 0)
+        {
+            MoveSideways(-sidewaysInput);
         }
     }
 
@@ -80,6 +87,17 @@ public class PlayerController : MonoBehaviour
     }
 
     public void MoveLeftRight(float addValue)
+    {
+        addValue *= Time.deltaTime * leftRightSpeed;
+
+        Quaternion rotator = Quaternion.AngleAxis(addValue, transform.up * -1);
+        Quaternion rotator2 = Quaternion.AngleAxis(addValue * 0.5f, transform.forward);
+        transform.rotation = rotator * transform.rotation;
+        transform.rotation = rotator2 * transform.rotation;
+
+    }
+
+    public void MoveSideways(float addValue)
     {
         addValue *= Time.deltaTime * leftRightSpeed;
 
