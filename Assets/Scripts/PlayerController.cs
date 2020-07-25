@@ -107,7 +107,7 @@ public class PlayerController : MonoBehaviour
 
     public void CheckIfResetRotation()
     {
-        if (verticalInput == 0 && horizontalInput == 0)
+        if (verticalInput == 0 && horizontalInput == 0 && sidewaysInput == 0)
         {
             if (resetAxisTimer > secondsToWait)
             {
@@ -124,7 +124,7 @@ public class PlayerController : MonoBehaviour
     public void ResetOrientation()
     {
         Vector3 forward = transform.forward;
-        forward.Normalize();
+        //forward.Normalize();
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(transform.forward), Time.deltaTime);
     }
 
