@@ -79,9 +79,9 @@ Material:
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _Speed: 10
+    - _Speed: 5
     - _SrcBlend: 1
-    - _Strength: 2
+    - _Strength: 9.5
     - _SurfaceDistortionAmount: 0.01
     - _SurfaceNoiseCutoff: 0.645
     - _UVSec: 0
