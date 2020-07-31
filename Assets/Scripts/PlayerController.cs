@@ -12,12 +12,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float secondsToWait = 1;
     [SerializeField] float timesToCheckPerSec;
     [SerializeField] Slider slider;
+    [SerializeField] Animator anim;
 
     float verticalInput;
     float horizontalInput;
     float sidewaysInput;
     float updatedSpeed;
-    float speedValue = 40;
+    float speedValue;
     float resetAxisTimer = 0;
     public float speedMeter = 200;
     float speedTransition = 2;
@@ -25,13 +26,12 @@ public class PlayerController : MonoBehaviour
     float yValue;
     float tempYValue;
     float yAcceleration;
-
     bool shouldContinueCheck = true;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        speedValue = speed;
     }
 
     // Update is called once per frame
@@ -49,6 +49,9 @@ public class PlayerController : MonoBehaviour
         StartCoroutine("CalculateAccelerationY");
 
         slider.value = speedMeter / 200;
+
+        anim.SetFloat("VerMovement", verticalInput);
+        anim.SetFloat("HorMovement", horizontalInput);
     }
 
     void FixedUpdate()

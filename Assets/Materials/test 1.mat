@@ -83,7 +83,7 @@ Material:
     - _Speed: 200
     - _SrcBlend: 1
     - _Strength: 1
-    - _TessellationUniform: 15
+    - _TessellationUniform: 10
     - _TranslucentGain: 0.5
     - _UVSec: 0
     - _WindStrength: 1

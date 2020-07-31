@@ -81,7 +81,7 @@ Material:
     - _SpecularHighlights: 1
     - _Speed: 5
     - _SrcBlend: 1
-    - _Strength: 9.5
+    - _Strength: 3
     - _SurfaceDistortionAmount: 0.01
     - _SurfaceNoiseCutoff: 0.645
     - _UVSec: 0
