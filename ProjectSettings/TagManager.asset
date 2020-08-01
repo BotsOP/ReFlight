@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - BasicRing
+  - RedRing
+  - GreenRing
   layers:
   - Default
   - TransparentFX

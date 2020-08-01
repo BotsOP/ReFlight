@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] float leftRightSpeed;
     [SerializeField] float upDownSpeed;
-    [SerializeField] float speed;
+    public float speed;
     [SerializeField] float momentumDelay;
     [SerializeField] float secondsToWait = 1;
     [SerializeField] float timesToCheckPerSec;

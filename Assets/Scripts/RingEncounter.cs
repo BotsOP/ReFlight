@@ -7,26 +7,33 @@ public class RingEncounter : MonoBehaviour
 {
     public Text ringCounter;
     int ringsCollected;
-    // Start is called before the first frame update
+    PlayerController player;
     void Start()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        player = GameObject.Find("Player").GetComponent<PlayerController>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.transform.parent.transform.parent.gameObject.tag);
+        //Debug.Log(other.transform.parent.transform.parent.gameObject.tag);
         if(other.transform.parent.transform.parent.gameObject.tag == "BasicRing")
         {
             ringsCollected++;
             ringCounter.text = ringsCollected.ToString();
             Destroy(other.transform.parent.transform.parent.gameObject, 1);
+        }
+        else if(other.transform.parent.transform.parent.gameObject.tag == "RedRing")
+        {
+            RedRingSystem redRing = other.transform.parent.transform.parent.gameObject.transform.parent.gameObject.GetComponent<RedRingSystem>();
+            redRing.RedRingCollected();
+        }
+        else if(other.transform.parent.transform.parent.gameObject.tag == "GreenRing")
+        {
+            float greenRingThresholdSpeed = other.transform.parent.transform.parent.gameObject.GetComponent<GreenRingSystem>().thresholdSpeed;
+            if(player.speed > greenRingThresholdSpeed)
+            {
+                Destroy(other.transform.parent.transform.parent.gameObject, 1);
+            }
         }
         else 
         {
