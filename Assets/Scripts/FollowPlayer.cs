@@ -9,18 +9,33 @@ public class FollowPlayer : MonoBehaviour
     [SerializeField] Transform speedCameraPos;
     [SerializeField] Transform slowCameraPos;
     [SerializeField] private float transitionSpeed = 6;
+    Camera mainCamera;
     Vector3 localOffset;
+
+    void Start()
+    {
+        mainCamera = Camera.main;
+    }
 
     void Update()
     {
-        FollowsPlayer();
-        CameraSpeed();
-        CameraSlow();
+        if(!playerController.isHuman)
+        {
+            mainCamera.enabled = true;
+            FollowsPlayer();
+            CameraSpeed();
+            //CameraSlow();
+        }
+        else
+        {
+            mainCamera.enabled = false;
+        }
+        
     }
 
     private void FollowsPlayer()
     {
-        if(!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.LeftControl))
+        if(!Input.GetKey(KeyCode.LeftShift))
             localOffset = cameraPos.position;
 
         transform.position = Vector3.Lerp(transform.position, localOffset, Time.deltaTime * transitionSpeed);

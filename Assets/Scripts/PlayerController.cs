@@ -13,50 +13,67 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float timesToCheckPerSec;
     [SerializeField] Slider slider;
     [SerializeField] Animator anim;
+    public bool isHuman = true;
+
+    public GameObject[] planeUIs;
 
     float verticalInput;
     float horizontalInput;
     float sidewaysInput;
-    float updatedSpeed;
+    public float updatedSpeed;
     float speedValue;
     float resetAxisTimer = 0;
     public float speedMeter = 200;
     float speedTransition = 2;
+    public bool isAlive = true;
+    float cachedTime;
 
     float yValue;
     float tempYValue;
     float yAcceleration;
     bool shouldContinueCheck = true;
+    public bool letGo;
 
-    // Start is called before the first frame update
+    float pitchWind;
+    float pitchMotor;
+    float volumeMotor;
+
+    AudioManager audioManager;
+
     void Start()
     {
+        GetAnim();
         speedValue = speed;
+        audioManager = FindObjectOfType<AudioManager>();
+        
     }
 
-    // Update is called once per frame
     void Update()
     {
-        updatedSpeed = speedValue - yAcceleration;
-        speed = Mathf.Lerp(speed, updatedSpeed, Time.deltaTime / speedTransition);
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        if(!isHuman)
+        {
+            updatedSpeed = speedValue - yAcceleration;
+            speed = Mathf.Lerp(speed, updatedSpeed, Time.deltaTime / speedTransition);
+            transform.Translate(Vector3.forward * speed * Time.deltaTime);
 
-        CheckMovement();
-        CheckIfResetRotation();
+            pitchWind = Mathf.Lerp(1, 3, (speed - 40) / 80);
+            audioManager.SetPitch(pitchWind, "Wind");
 
-        SpeedUp();
-        SlowDown();
-        StartCoroutine("CalculateAccelerationY");
+            CheckMovement();
+            CheckIfResetRotation();
 
-        slider.value = speedMeter / 200;
+            SpeedUp();
+            //SlowDown();
+            StartCoroutine("CalculateAccelerationY");
 
-        anim.SetFloat("VerMovement", verticalInput);
-        anim.SetFloat("HorMovement", horizontalInput);
-    }
+            slider.value = speedMeter / 200;
 
-    void FixedUpdate()
-    {
-
+            if(anim != null)
+            {
+                anim.SetFloat("VerMovement", verticalInput);
+                anim.SetFloat("HorMovement", horizontalInput);
+            }
+        }
     }
 
     public void CheckMovement()
@@ -65,19 +82,50 @@ public class PlayerController : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         sidewaysInput = Input.GetAxis("Sideways");
 
-        if (verticalInput != 0)
+        if (verticalInput != 0 && isAlive)
         {
             MoveUpDown(verticalInput);
         }
 
-        if (horizontalInput != 0)
+        if (horizontalInput != 0 && isAlive)
         {
             MoveLeftRight(-horizontalInput);
         }
 
-        if (sidewaysInput != 0)
+        if (sidewaysInput != 0 && isAlive)
         {
             MoveSideways(-sidewaysInput);
+        }
+    }
+
+    public void BecomePlane()
+    {
+        isHuman = false;
+        audioManager.Play("Wind");
+        audioManager.Play("Motor");
+        audioManager.StopSound("Nature");
+        audioManager.StopSound("Footsteps");
+        GameObject.Find("HumanCamera").GetComponent<AudioListener>().enabled = false;
+        GameObject.Find("Main Camera").GetComponent<AudioListener>().enabled = true;
+
+        foreach(GameObject planeUI in planeUIs)
+        {
+            Debug.Log(planeUI.name);
+            planeUI.SetActive(true);
+        }
+    }
+
+    public void BecomeHuman()
+    {
+        isHuman = true;
+        audioManager.StopSound("Wind");
+        audioManager.StopSound("Motor");
+        GameObject.Find("Main Camera").GetComponent<AudioListener>().enabled = false;
+        GameObject.Find("HumanCamera").GetComponent<AudioListener>().enabled = true;
+
+        foreach(GameObject planeUI in planeUIs)
+        {
+            planeUI.SetActive(false);
         }
     }
 
@@ -152,6 +200,17 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(CheckSpeedMeter());
         if (speedMeter > 0 && Input.GetKey(KeyCode.LeftShift))
         {
+            if(Time.time - cachedTime > 2 && !letGo)
+            {
+                cachedTime = Time.time;
+                letGo = true; 
+            }
+            
+            pitchMotor = Mathf.Lerp(audioManager.ReturnPitch("Motor"), 1.2f, Time.time - cachedTime);
+            volumeMotor = Mathf.Lerp(audioManager.ReturnVolume("Motor"), 0.3f, Time.time - cachedTime);
+            audioManager.SetPitch(pitchMotor, "Motor");
+            audioManager.SetVolume(volumeMotor, "Motor");
+
             speedValue = 100;
             speedTransition = 0.5f;
             if (speed > 150)
@@ -163,6 +222,19 @@ public class PlayerController : MonoBehaviour
         {
             speedValue = 40;
             speedTransition = 2f;
+        }
+        else
+        {
+            if(Time.time - cachedTime > 1 && letGo)
+            {
+                cachedTime = Time.time;
+                letGo = false; 
+            }
+
+            pitchMotor = Mathf.Lerp(audioManager.ReturnPitch("Motor"), 1, Time.time - cachedTime);
+            volumeMotor = Mathf.Lerp(audioManager.ReturnVolume("Motor"), 0.2f, Time.time - cachedTime);
+            audioManager.SetPitch(pitchMotor, "Motor");
+            audioManager.SetVolume(volumeMotor, "Motor");
         }
             
     }
@@ -198,6 +270,11 @@ public class PlayerController : MonoBehaviour
             speedTransition = 2f;
         }
 
+    }
+
+    public void GetAnim()
+    {
+        anim = transform.GetChild(5).gameObject.GetComponent<Animator>();
     }
 
 }

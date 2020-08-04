@@ -8,14 +8,17 @@ public class RedRingSystem : MonoBehaviour
     [SerializeField] private Material ringMaterial;
     [SerializeField] Color beginColor;
     [SerializeField] Color EndColor;
+    CollisionManager collisionManager;
     public int ringsCollected;
     int amountRings;
     bool shouldCountDown;
     float startTime;
     bool firstTimeCountdown = true;
+    private IEnumerator coroutine;
 
     void Start()
     {
+        collisionManager = GameObject.Find("Player").GetComponent<CollisionManager>();
         amountRings = transform.childCount;
         for (int i = 1; i < amountRings; i++) 
         {
@@ -47,18 +50,33 @@ public class RedRingSystem : MonoBehaviour
         FirstEncounter();
         if (ringsCollected < amountRings - 1)
         {
-            transform.GetChild(ringsCollected).gameObject.SetActive(false);
+            collisionManager.HitRing();
+            coroutine = DeactivateRing(transform.GetChild(ringsCollected).gameObject);
+            StartCoroutine(coroutine);
+            //transform.GetChild(ringsCollected).gameObject.SetActive(false);
             ringsCollected++;
             transform.GetChild(ringsCollected).gameObject.SetActive(true);
         }
         else
-            Destroy(gameObject);
+            CompletedRedRing();
+    }
+    private IEnumerator DeactivateRing(GameObject gameObject)
+    {
+        yield return new WaitForSeconds(1f);
+        gameObject.SetActive(false);
+    }
+
+    private IEnumerator DelayedSoundEffect()
+    {
+        yield return new WaitForSeconds(1f);
+        FindObjectOfType<AudioManager>().Play("RedRingCompletion");
     }
 
     private void FirstEncounter()
     {
         if(firstTimeCountdown)
         {
+            collisionManager.lastCollectedRing = gameObject;
             startTime = Time.time;
             shouldCountDown = true;
 
@@ -70,5 +88,19 @@ public class RedRingSystem : MonoBehaviour
 
             firstTimeCountdown = false;
         }
+    }
+
+    private void CompletedRedRing()
+    {
+        collisionManager.HitRing();
+        StartCoroutine("DelayedSoundEffect");
+        collisionManager.RingCollected(gameObject);
+        coroutine = DeactivateRing(transform.GetChild(amountRings - 1).gameObject);
+        StartCoroutine(coroutine);
+        coroutine = DeactivateRing(gameObject);
+        StartCoroutine(coroutine);
+        coroutine = DeactivateRing(transform.GetChild(0).gameObject);
+        StartCoroutine(coroutine);
+        
     }
 }
