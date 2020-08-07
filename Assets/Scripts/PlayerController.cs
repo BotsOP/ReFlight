@@ -16,14 +16,16 @@ public class PlayerController : MonoBehaviour
     public bool isHuman = true;
 
     public GameObject[] planeUIs;
-
+    WaitForSeconds regenTick = new WaitForSeconds(0.05f);
+    Coroutine regen;
     float verticalInput;
     float horizontalInput;
     float sidewaysInput;
     public float updatedSpeed;
     float speedValue;
     float resetAxisTimer = 0;
-    public float speedMeter = 200;
+    float maxExtraSpeed = 100;
+    public float currentExtraSpeed;
     float speedTransition = 2;
     public bool isAlive = true;
     float cachedTime;
@@ -45,7 +47,9 @@ public class PlayerController : MonoBehaviour
         GetAnim();
         speedValue = speed;
         audioManager = FindObjectOfType<AudioManager>();
-        
+        currentExtraSpeed = maxExtraSpeed;
+        slider.maxValue = maxExtraSpeed;
+        slider.value = maxExtraSpeed;
     }
 
     void Update()
@@ -61,18 +65,22 @@ public class PlayerController : MonoBehaviour
 
             CheckMovement();
             CheckIfResetRotation();
-
-            SpeedUp();
-            //SlowDown();
+            
             StartCoroutine("CalculateAccelerationY");
-
-            slider.value = speedMeter / 200;
 
             if(anim != null)
             {
                 anim.SetFloat("VerMovement", verticalInput);
                 anim.SetFloat("HorMovement", horizontalInput);
             }
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if(!isHuman)
+        {
+            SpeedUp();
         }
     }
 
@@ -110,7 +118,6 @@ public class PlayerController : MonoBehaviour
 
         foreach(GameObject planeUI in planeUIs)
         {
-            Debug.Log(planeUI.name);
             planeUI.SetActive(true);
         }
     }
@@ -197,8 +204,11 @@ public class PlayerController : MonoBehaviour
 
     private void SpeedUp()
     {
-        StartCoroutine(CheckSpeedMeter());
-        if (speedMeter > 0 && Input.GetKey(KeyCode.LeftShift))
+        if(Input.GetKey(KeyCode.LeftShift))
+        {
+            UseExtraSpeed(1);
+        }
+        if (currentExtraSpeed > 0 && Input.GetKey(KeyCode.LeftShift))
         {
             if(Time.time - cachedTime > 2 && !letGo)
             {
@@ -218,13 +228,11 @@ public class PlayerController : MonoBehaviour
                 speed = 150;
             }
         }
-        else if (Input.GetKeyUp(KeyCode.LeftShift) || speedMeter < 0)
+        else if (!Input.GetKeyDown(KeyCode.LeftShift) || currentExtraSpeed == 0)
         {
             speedValue = 40;
             speedTransition = 2f;
-        }
-        else
-        {
+
             if(Time.time - cachedTime > 1 && letGo)
             {
                 cachedTime = Time.time;
@@ -236,40 +244,42 @@ public class PlayerController : MonoBehaviour
             audioManager.SetPitch(pitchMotor, "Motor");
             audioManager.SetVolume(volumeMotor, "Motor");
         }
+        else
+        {
+            
+        }
             
     }
 
-    private IEnumerator CheckSpeedMeter()
+    private void UseExtraSpeed(float amount)
     {
-        if (Input.GetKey(KeyCode.LeftShift) && speedMeter >= -1)
+        if(currentExtraSpeed - amount >= 0)
         {
-            speedMeter = Mathf.Clamp(speedMeter, 0, 200);
-            speedMeter --;
+            currentExtraSpeed -= amount;
+            slider.value = currentExtraSpeed;
+
+            if(regen != null)
+                StopCoroutine(regen);
+
+            regen = StartCoroutine(RegenExtraSpeed());
         }
-        else if (speedMeter < 200)
+        else
         {
-            yield return new WaitForSeconds(1);
-            if(speedMeter < 200)
-                speedMeter += 2;
-            if (speedMeter == 201)
-                speedMeter = 200;
+            Debug.Log("Not enough extra speed");
         }
-        
     }
 
-    private void SlowDown()
+    private IEnumerator RegenExtraSpeed()
     {
-        if (Input.GetKey(KeyCode.LeftControl))
-        {
-            speedValue = 25;
-            speedTransition = 0.5f;
-        }
-        else if (Input.GetKeyUp(KeyCode.LeftControl))
-        {
-            speedValue = 40;
-            speedTransition = 2f;
-        }
+        yield return new WaitForSeconds(2f);
 
+        while(currentExtraSpeed < maxExtraSpeed)
+        {
+            currentExtraSpeed += maxExtraSpeed / 100;
+            slider.value = currentExtraSpeed;
+            yield return regenTick;
+        }
+        regen = null;
     }
 
     public void GetAnim()

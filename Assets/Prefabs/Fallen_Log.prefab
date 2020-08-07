@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8697444095197503697}
   - component: {fileID: 7880188934987914508}
   - component: {fileID: 1002119498044136969}
+  - component: {fileID: 8448450469765168085}
   m_Layer: 0
   m_Name: Fallen_Log
   m_TagString: Untagged
@@ -80,3 +81,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &8448450469765168085
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8171412038485526271}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -3742436867637563461, guid: 466873ef9ca5b1948a6c1b33f881cfe6, type: 3}

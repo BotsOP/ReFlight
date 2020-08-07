@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4488128263168635018}
   - component: {fileID: 2152085570224095121}
   - component: {fileID: 1559434319888736631}
+  - component: {fileID: 7648775237523476339}
   m_Layer: 0
   m_Name: Torus.004
   m_TagString: Untagged
@@ -25,13 +26,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8578512365432483934}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+  m_LocalRotation: {x: -0.7069834, y: 0, z: 0, w: 0.7072302}
   m_LocalPosition: {x: 16.429396, y: -0.37653536, z: 5.5172763}
-  m_LocalScale: {x: 59.06986, y: 59.06986, z: 59.06986}
+  m_LocalScale: {x: 68.521034, y: 68.52103, z: 68.52103}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: 0}
 --- !u!33 &2152085570224095121
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -80,3 +81,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &7648775237523476339
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8578512365432483934}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 1907608370310603259, guid: 466873ef9ca5b1948a6c1b33f881cfe6, type: 3}

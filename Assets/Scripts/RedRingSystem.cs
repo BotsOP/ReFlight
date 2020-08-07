@@ -31,7 +31,6 @@ public class RedRingSystem : MonoBehaviour
         if(shouldCountDown)
         {
             ringMaterial.color = Color.Lerp(beginColor, EndColor, (Time.time - startTime) / countDownDuration);
-            //Debug.Log(Time.time - startTime + "          " + countDownDuration);
             if(Time.time - startTime > countDownDuration)
             {
                 transform.GetChild(0).gameObject.SetActive(true);
@@ -76,7 +75,6 @@ public class RedRingSystem : MonoBehaviour
     {
         if(firstTimeCountdown)
         {
-            collisionManager.lastCollectedRing = gameObject;
             startTime = Time.time;
             shouldCountDown = true;
 
@@ -92,9 +90,11 @@ public class RedRingSystem : MonoBehaviour
 
     private void CompletedRedRing()
     {
+        Debug.Log("completed ring");
+        collisionManager.RingCollected(gameObject);
         collisionManager.HitRing();
         StartCoroutine("DelayedSoundEffect");
-        collisionManager.RingCollected(gameObject);
+        
         coroutine = DeactivateRing(transform.GetChild(amountRings - 1).gameObject);
         StartCoroutine(coroutine);
         coroutine = DeactivateRing(gameObject);

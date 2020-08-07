@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3729608742791375885}
   - component: {fileID: 4398043147525470419}
   - component: {fileID: 7806033099653666359}
+  - component: {fileID: 5454090155117778695}
   m_Layer: 0
   m_Name: Fence1
   m_TagString: Untagged
@@ -25,13 +26,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 784591974241185481}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+  m_LocalRotation: {x: -0.7069834, y: 0, z: 0, w: 0.7072302}
   m_LocalPosition: {x: 44.514725, y: -0.38425723, z: 10.935752}
-  m_LocalScale: {x: 37.11183, y: 37.11183, z: 111.43006}
+  m_LocalScale: {x: 37.111835, y: 37.11183, z: 111.43007}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: 0}
 --- !u!33 &4398043147525470419
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -79,3 +80,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &5454090155117778695
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 784591974241185481}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -1798397135149837112, guid: 466873ef9ca5b1948a6c1b33f881cfe6, type: 3}

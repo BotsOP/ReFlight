@@ -44,10 +44,10 @@ public class FollowPlayer : MonoBehaviour
 
     private void CameraSpeed()
     {
-        if (Input.GetKey(KeyCode.LeftShift) && playerController.speedMeter >= 0)
+        if (Input.GetKey(KeyCode.LeftShift) && playerController.currentExtraSpeed >= 0)
             localOffset = speedCameraPos.position;
 
-        else if (playerController.speedMeter < 0)
+        else if (playerController.currentExtraSpeed < 0)
             localOffset = cameraPos.position;
     }
 

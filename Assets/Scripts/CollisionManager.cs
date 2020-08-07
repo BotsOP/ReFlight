@@ -57,28 +57,37 @@ public class CollisionManager : MonoBehaviour
                     StartCoroutine(coroutine);
                     HitRing();
                 }
-            }
-            else if(other.gameObject.name != "GetInPlane")
-                {
-                    DeathFunction();
-                }
+            } 
         }
-        else if(other.gameObject.name != "GetInPlane")
+        else if(other.gameObject.tag != "DontExplode")
             {
                 DeathFunction();
             }
         
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "sea")
+        {
+            DeathFunction();
+        }
+    }
+
     public void RingCollected(GameObject ringHit)
     {
+        Debug.Log("completed ring2");
         lastCollectedRing = ringHit;
         if(ringHit.tag == "BasicRing")
             basicRingsCollected++;
         else if(ringHit.tag == "GreenRing")
             greenRingsCollected++;
         else if(ringHit.tag == "RedRing")
+        {
+            Debug.Log("completed ring3");
             redRingsCollected++;
+        }
+            
         basicRingCounter.text = basicRingsCollected.ToString();
         greenRingCounter.text = greenRingsCollected.ToString();
         redRingCounter.text = redRingsCollected.ToString();
@@ -92,6 +101,7 @@ public class CollisionManager : MonoBehaviour
 
     private void DeathFunction()
     {
+        
         Debug.Log("GAME OVER");
         audioManager.Play("Explosion");
         audioManager.StopSound("Motor");
@@ -122,13 +132,20 @@ public class CollisionManager : MonoBehaviour
             greenRingCounter.text = greenRingsCollected.ToString();
             redRingCounter.text = redRingsCollected.ToString();
 
-            //fix bug where ring doesnt get reactivated if you die within one second
-            lastCollectedRing.SetActive(true);
-            
+            StartCoroutine(ActivateRingAgain());
+            lastCollectedRing = null;
         }
         coroutine = AliveFunction();
         StartCoroutine(coroutine);
             
+    }
+
+    private IEnumerator ActivateRingAgain()
+    {
+        //Double active in case you die within one second
+        lastCollectedRing.SetActive(true);
+        yield return new WaitForSeconds(1.1f);
+        lastCollectedRing.SetActive(true);
     }
 
     private IEnumerator AliveFunction()
