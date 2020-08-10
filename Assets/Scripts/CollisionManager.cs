@@ -33,7 +33,7 @@ public class CollisionManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.transform.parent != null && other.transform.parent.transform.parent != null)
+        if(other.transform.parent != null && other.transform.parent.transform.parent != null && other.gameObject.tag != "Sea")
         {
             if(other.transform.parent.transform.parent.gameObject.tag == "BasicRing")
                 {
@@ -143,8 +143,10 @@ public class CollisionManager : MonoBehaviour
     private IEnumerator ActivateRingAgain()
     {
         //Double active in case you die within one second
+        Debug.Log("ring: " + lastCollectedRing.gameObject.name);
         lastCollectedRing.SetActive(true);
         yield return new WaitForSeconds(1.1f);
+        Debug.Log("ring: " + lastCollectedRing.gameObject.name);
         lastCollectedRing.SetActive(true);
     }
 
